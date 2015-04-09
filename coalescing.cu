@@ -46,7 +46,7 @@ void runTest(int deviceId, int nMB)
   checkCuda( cudaEventCreate(&startEvent) );
   checkCuda( cudaEventCreate(&stopEvent) );
 
-  printf("Offset, Bandwidth (GB/s):\n");
+  printf("Offset, Bandwidth (GB/s), Time (ms):\n");
   
   offset<<<n/blockSize, blockSize>>>(d_a, 0); // warm up
 
@@ -59,11 +59,11 @@ void runTest(int deviceId, int nMB)
     checkCuda( cudaEventSynchronize(stopEvent) );
 
     checkCuda( cudaEventElapsedTime(&ms, startEvent, stopEvent) );
-    printf("%d, %f\n", i, 2*nMB/ms);
+    printf("%d, %f, %f\n", i, 2*nMB/ms, ms);
   }
 
   printf("\n");
-  printf("Stride, Bandwidth (GB/s):\n");
+  printf("Stride, Bandwidth (GB/s), Time (ms):\n");
 
   stride<<<n/blockSize, blockSize>>>(d_a, 1); // warm up
   for (int i = 1; i <= 32; i++) {
@@ -75,7 +75,7 @@ void runTest(int deviceId, int nMB)
     checkCuda( cudaEventSynchronize(stopEvent) );
 
     checkCuda( cudaEventElapsedTime(&ms, startEvent, stopEvent) );
-    printf("%d, %f\n", i, 2*nMB/ms);
+    printf("%d, %f, %f\n", i, 2*nMB/ms, ms);
   }
 
   checkCuda( cudaEventDestroy(startEvent) );
